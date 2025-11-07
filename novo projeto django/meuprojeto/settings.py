@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-!-n0q$4_0vgrl()k02yr_pu%gv^(6_7ip!p!f%2_2&ch1x_nsv'
-
+    
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -124,3 +124,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/gerenciar/'
 LOGOUT_REDIRECT_URL = '/gerenciar/'
+
+# Diz pro django onde estao meus arquivos estaticos
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]

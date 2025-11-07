@@ -1,0 +1,21 @@
+{% extends 'gerenciador_de_epi/base.html' %}
+
+{% block content %}
+    <h2>Registros de Movimentações de EPI</h2>
+    
+    <a href="{% url 'registrar_emprestimo' %}" class="btn-primary" style="margin-bottom: 20px; display: inline-block;">
+        + Registrar Nova Entrega
+    </a>
+
+    <div class="tabela-container">
+        {% for emprestimo in lista_emprestimos %}
+            <div class="movimentacao-card">
+                <p><strong>Colaborador:</strong> {{ emprestimo.colaborador.nome_completo }}</p>
+                <p><strong>EPI Entregue:</strong> {{ emprestimo.epi.nome }} (CA: {{ emprestimo.epi.ca }})</p>
+                <p><strong>Data/Hora da Entrega:</strong> {{ emprestimo.data_emprestimo }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhum registro de movimentação encontrado.</p>
+        {% endfor %}
+    </div>
+{% endblock content %}

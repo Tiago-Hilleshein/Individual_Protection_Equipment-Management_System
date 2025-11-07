@@ -1,78 +1,132 @@
 # gerenciador_de_epi/views.py
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404 # ⬅️ Adicionamos o 'redirect'
-from .models import Colaborador
-from .forms import ColaboradorForm # Importação do formulário
+from django.shortcuts import render, redirect, get_object_or_404 
+# ⬅️ CORREÇÃO: Importar TODOS os modelos
+from .models import Colaborador, EPI, Emprestimo 
+from .forms import ColaboradorForm, EmprestimoForm 
 
+# =======================================================
+# DASHBOARD / PÁGINA INICIAL
+# =======================================================
 @login_required
-def pagina_inicial(request):
+def dashboard(request):
+    """
+    Exibe o Dashboard principal e a saudação.
+    """
+    return render(request, 'gerenciador_de_epi/dashboard.html')
+
+
+# =======================================================
+# LISTAGEM DE COLABORADORES (READ)
+# =======================================================
+@login_required
+def listar_colaboradores(request):
+    """
+    Busca e lista todos os colaboradores.
+    """
     colaboradores = Colaborador.objects.all() 
 
     contexto = {
         'lista_colaboradores': colaboradores 
     }
-    return render(request, 'gerenciador_de_epi/index.html', contexto)
+    return render(request, 'gerenciador_de_epi/colaboradores_lista.html', contexto)
 
 
+# =======================================================
+# CADASTRO DE COLABORADOR (CREATE)
+# =======================================================
 @login_required
 def cadastrar_colaborador(request):
     """
     View para exibir e processar o formulário de cadastro de Colaborador.
     """
     if request.method == 'POST':
-        # 1. Se os dados foram enviados, preenchemos o formulário
         form = ColaboradorForm(request.POST)
         
         if form.is_valid():
-            # 2. Se os dados estiverem corretos, salvamos no banco
             form.save()
-            
-            # 3. Redirecionamos para a lista de colaboradores (rota 'index')
-            return redirect('/gerenciar/') 
+            return redirect('listar_colaboradores') # ⬅️ CORREÇÃO: Redirecionar para o nome da rota
     else:
-        # Se for um acesso direto (GET), criamos um formulário vazio
         form = ColaboradorForm()
         
     contexto = {'form': form}
     return render(request, 'gerenciador_de_epi/colaborador_form.html', contexto)
+
+
+# =======================================================
+# EDIÇÃO DE COLABORADOR (UPDATE)
+# =======================================================
 @login_required
 def editar_colaborador(request, pk):
     """
     View para buscar, exibir e salvar a edição de um Colaborador.
     """
-    # 1. Busca o objeto Colaborador pelo ID (pk). 
-    # Se não encontrar, mostra a página 404.
     colaborador = get_object_or_404(Colaborador, pk=pk)
     
     if request.method == 'POST':
-        # 2. Preenche o formulário com os dados POST E INFORMA O OBJETO A SER ATUALIZADO (instance)
-        form = ColaboradorForm(request.POST, instance=colaborador)
+        # Instância informa ao ModelForm qual objeto atualizar
+        form = ColaboradorForm(request.POST, instance=colaborador) 
         
         if form.is_valid():
-            # 3. O save() atualiza o objeto existente (não cria um novo)
             form.save()
-            return redirect('index') # Redireciona para a lista após a edição
+            return redirect('listar_colaboradores') # ⬅️ CORREÇÃO: Redirecionar para o nome da rota
     else:
-        # 4. Se for GET, preenche o formulário com os dados ATUAIS do objeto
-        form = ColaboradorForm(instance=colaborador)
+        # Preenche o formulário com os dados ATUAIS
+        form = ColaboradorForm(instance=colaborador) 
         
     contexto = {'form': form}
-    # Reutilizamos o mesmo template de formulário de cadastro
     return render(request, 'gerenciador_de_epi/colaborador_form.html', contexto)
+
+
+# =======================================================
+# EXCLUSÃO DE COLABORADOR (DELETE)
+# =======================================================
 @login_required
 def deletar_colaborador(request, pk):
-    # 1. Busca o objeto Colaborador pelo ID. Se não encontrar, mostra 404.
     colaborador = get_object_or_404(Colaborador, pk=pk)
 
-    # 2. A deleção só deve ocorrer se o método for POST (enviado por um formulário)
     if request.method == 'POST':
-        colaborador.delete() # Comando direto para remover do banco
-        print("Deletado com sucesso!")
-        
-        # 3. Redireciona de volta para a lista (página inicial)
-        return redirect('index')
+        colaborador.delete()
+        print(f"Colaborador {colaborador.nome_completo} deletado com sucesso!")
+        return redirect('listar_colaboradores') # ⬅️ CORREÇÃO: Redirecionar para o nome da rota
 
-    # Se o método não for POST, renderizamos um template de confirmação (próximo passo)
     contexto = {'colaborador': colaborador}
     return render(request, 'gerenciador_de_epi/colaborador_confirm_delete.html', contexto)
+
+
+# =======================================================
+# REGISTRO DE EMPRÉSTIMO (CREATE)
+# =======================================================
+@login_required
+def registrar_emprestimo(request):
+    """
+    View para exibir e processar o formulário de registro de Empréstimo.
+    """
+    if request.method == 'POST':
+        form = EmprestimoForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('listar_emprestimos') # ⬅️ Redirecionar para a lista de empréstimos
+    else:
+        form = EmprestimoForm()
+        
+    contexto = {'form': form}
+    return render(request, 'gerenciador_de_epi/emprestimo_form.html', contexto)
+
+
+# =======================================================
+# LISTAGEM DE EMPRÉSTIMOS (READ)
+# =======================================================
+@login_required
+def listar_emprestimos(request):
+    """
+    Busca todos os registros de Empréstimo, buscando também os dados relacionados de Colaborador e EPI.
+    """
+    emprestimos = Emprestimo.objects.select_related('colaborador', 'epi').all() 
+    
+    contexto = {
+        'lista_emprestimos': emprestimos 
+    }
+    return render(request, 'gerenciador_de_epi/emprestimos_lista.html', contexto)

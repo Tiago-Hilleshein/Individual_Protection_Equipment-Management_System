@@ -1,0 +1,35 @@
+{% extends 'gerenciador_de_epi/base.html' %}
+
+{% block content %}
+    <div style="margin-bottom: 20px;">
+        <h2>Bem-vindo(a), {{ user.username|capfirst }}!</h2>
+        <p>Este é o Dashboard do Sistema de Gestão de EPIs.</p>
+        <p>Aqui você verá um resumo das informações críticas (total de colaboradores, EPIs com validade próxima, e outras informações).</p>
+    </div>
+
+    <hr>
+    
+    <h3>Colaboradores Cadastrados (Resumo)</h3>
+    
+    {% for colaborador in lista_colaboradores %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 5px;">
+            <p><strong>Nome:</strong> {{ colaborador.nome_completo }}</p>
+            <p><strong>Matrícula:</strong> {{ colaborador.matricula }}</p>
+            <p><strong>Setor:</strong> {{ colaborador.setor }}</p>
+            
+            <p>
+                <a href="{% url 'editar_colaborador' pk=colaborador.pk %}">
+                    [Editar Colaborador]
+                </a>
+                <a href="{% url 'deletar_colaborador' pk=colaborador.pk %}" style="color: red; margin-left: 10px;">
+                    [Desligar Colaborador]
+                </a>
+            </p>
+            
+        </div>
+    {% empty %}
+        <p>Nenhum colaborador encontrado no momento. 
+           <a href="{% url 'cadastrar_colaborador' %}">Cadastre um!</a></p>
+    {% endfor %}
+
+    {% endblock content %}

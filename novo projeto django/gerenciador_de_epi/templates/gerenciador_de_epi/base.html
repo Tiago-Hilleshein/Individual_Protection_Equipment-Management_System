@@ -1,26 +1,77 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Gerenciador de EPI</title>
+    <title>Sistema Gerenciador de EPIs</title>
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
 </head>
 <body>
-    <header>
-        <h1>Sistema Gerenciador de EPIs</h1>
-        <hr>
-    </header>
 
-    <main>
-        {% block content %}
+    <div id="container">
         
-        <p>Conteúdo padrão do template base. Esta linha será substituída.</p>
+        <div id="sidebar">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-hard-hat"></i> 
+                    <h2>Sistema de Gestão de EPIs</h2>
+                </div>
+            </header>
+            
+            <nav>
+                <a href="{% url 'dashboard' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-chart-line nav-icon"></i> Dashboard
+                </a>
+                
+                <a href="{% url 'listar_colaboradores' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'listar_colaboradores' or request.resolver_match.url_name == 'cadastrar_colaborador' or request.resolver_match.url_name == 'editar_colaborador' %}active{% endif %}">
+                    <i class="fas fa-users nav-icon"></i> Colaboradores
+                </a>
+                
+                <a href="{% url 'registrar_emprestimo' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'registrar_emprestimo' %}active{% endif %}">
+                    <i class="fas fa-box nav-icon"></i> Registrar Empréstimo
+                </a>
+                
+                <a href="{% url 'listar_emprestimos' %}" 
+                   class="nav-button {% if request.resolver_match.url_name == 'listar_emprestimos' %}active{% endif %}">
+                    <i class="fas fa-exchange-alt nav-icon"></i> Movimentações
+                </a>
+                
+                <a href="#" class="nav-button">
+                    <i class="fas fa-file-alt nav-icon"></i> Relatórios
+                </a>
+                <a href="#" class="nav-button">
+                    <i class="fas fa-cog nav-icon"></i> Configurações
+                </a>
+            </nav>
+            
+            </div>
         
-        {% endblock content %}
-    </main>
+        <div id="main-content">
+            
+            <header id="top-header">
+                <h1>{{ page_title|default:'Dashboard' }}</h1>
+                <div id="user-info">
+                    <span style="font-weight: bold;">Olá, {{ user.username|capfirst }}</span>
+                    <a href="{% url 'logout' %}" id="logout-link">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </a> 
+                </div>
+            </header>
+            
+            <div id="content-body">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </div>
 
-    <footer>
-        <hr>
-        <p>&copy; 2025 - Todos os direitos reservados.</p>
-    </footer>
+    </div>
+
 </body>
 </html>

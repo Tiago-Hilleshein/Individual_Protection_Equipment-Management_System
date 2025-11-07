@@ -59,9 +59,9 @@ class Emprestimo(models.Model):
     )
     
     # Data em que o EPI foi entregue
-    data_emprestimo = models.DateField(
-        auto_now_add=True, # Define a data automaticamente no momento da criação
-        verbose_name='Data de Empréstimo'
+    data_emprestimo = models.DateTimeField( # Data e HORA da entrega (registro automático e não editável)
+        auto_now_add=True, 
+        verbose_name='Data e Hora da Entrega'
     )
 
     def __str__(self):
