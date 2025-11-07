@@ -1,0 +1,30 @@
+{% extends 'gerenciador_de_epi/base.html' %}
+
+{% block content %}
+    <h2>Colaboradores Cadastrados</h2>
+    
+    {% for colaborador in lista_colaboradores %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 5px;">
+            <p><strong>Nome:</strong> {{ colaborador.nome_completo }}</p>
+            <p><strong>Matrícula:</strong> {{ colaborador.matricula }}</p>
+            <p><strong>Setor:</strong> {{ colaborador.setor }}</p>
+            
+            <p>
+                <a href="{% url 'editar_colaborador' pk=colaborador.pk %}">
+                    [Editar Colaborador]
+                </a>
+
+                <a href="{% url 'deletar_colaborador' pk=colaborador.pk %}" style="color: red; margin-left: 10px;">
+                    [Desligar Colaborador]
+                </a>
+            </p>
+            
+        </div>
+    {% empty %}
+        <p>Nenhum colaborador encontrado no momento. Cadastre um!</p>
+    {% endfor %}
+    
+    <a href="{% url 'cadastrar_colaborador' %}">
+        + Cadastrar Novo Colaborador
+    </a>
+{% endblock content %}

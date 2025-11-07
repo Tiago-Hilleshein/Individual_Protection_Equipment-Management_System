@@ -1,0 +1,12 @@
+<h2>Login no Sistema</h2>
+
+{% if form.errors %}
+    <p style="color: red;">Seu nome de usuário e senha não correspondem. Por favor, tente novamente.</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Entrar</button>
+</form>
+
+<p>Use o Superuser que você criou no passo anterior.</p>

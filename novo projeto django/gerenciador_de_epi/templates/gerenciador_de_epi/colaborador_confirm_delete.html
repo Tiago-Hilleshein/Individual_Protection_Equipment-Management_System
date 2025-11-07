@@ -1,0 +1,18 @@
+{% extends 'gerenciador_de_epi/base.html' %}
+{% block content %}
+    <h2>Confirmar Desligamento</h2>
+
+    <p>Você tem certeza que deseja deletar o colaborador <strong>{{ colaborador.nome_completo }}</strong>?</p>
+    
+    <form method="post">
+        {% csrf_token %} 
+        
+        <button type="submit" style="background-color: red; color: white; padding: 10px;">
+            Sim, Desligar Colaborador
+        </button>
+        
+        <a href="{% url 'index' %}" style="margin-left: 15px;">
+            Cancelar e Voltar
+        </a>
+    </form>
+{% endblock content %}
