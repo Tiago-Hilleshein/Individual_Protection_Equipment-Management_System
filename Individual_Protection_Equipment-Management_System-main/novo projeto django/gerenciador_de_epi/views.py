@@ -2,7 +2,7 @@
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404 
-from django.contrib import messages
+# ⬅️ CORREÇÃO: Importar TODOS os modelos
 from .models import Colaborador, EPI, Emprestimo 
 from .forms import ColaboradorForm, EmprestimoForm 
 
@@ -25,10 +25,10 @@ def listar_colaboradores(request):
     """
     Busca e lista todos os colaboradores.
     """
-    colaboradores = Colaborador.objects.all()
+    colaboradores = Colaborador.objects.all() 
 
     contexto = {
-        'lista_colaboradores': colaboradores
+        'lista_colaboradores': colaboradores 
     }
     return render(request, 'gerenciador_de_epi/colaboradores_lista.html', contexto)
 
@@ -46,8 +46,7 @@ def cadastrar_colaborador(request):
         
         if form.is_valid():
             form.save()
-            messages.success(request, 'Colaborador cadastrado com sucesso!')
-            return redirect('listar_colaboradores')
+            return redirect('listar_colaboradores') # ⬅️ CORREÇÃO: Redirecionar para o nome da rota
     else:
         form = ColaboradorForm()
         
@@ -118,7 +117,7 @@ def registrar_emprestimo(request):
 
 
 # =======================================================
-# LISTAGEM DE EMPRÉSTIMOS (READ)                        #
+# LISTAGEM DE EMPRÉSTIMOS (READ)
 # =======================================================
 @login_required
 def listar_emprestimos(request):
@@ -131,40 +130,3 @@ def listar_emprestimos(request):
         'lista_emprestimos': emprestimos 
     }
     return render(request, 'gerenciador_de_epi/emprestimos_lista.html', contexto)
-
-# =======================================================
-# Listar os Epis                                        #
-# =======================================================
-@login_required
-def listar_epis(request):
-    """
-    Lista todos os EPIs cadastrados.
-    """
-    epis = EPI.objects.all()
-    contexto = {
-        'lista_epis': epis
-    }
-    return render(request, 'gerenciador_de_epi/epis_lista.html', contexto)
-
-
-# =======================================================
-#               Cadastrar os Epis                       #
-# =======================================================
-@login_required
-def cadastrar_epi(request):
-    """
-    View para exibir e processar o formulário de cadastro de EPI.
-    """
-    if request.method == 'POST':
-        form = EPIForm(request.POST) # Usa o formulário de EPI
-        
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'EPI cadastrado com sucesso!')
-            # Redireciona para a lista de EPIs
-            return redirect('listar_epis') 
-    else:
-        form = EPIForm()
-        
-    contexto = {'form': form}
-    return render(request, 'gerenciador_de_epi/epi_form.html', contexto)

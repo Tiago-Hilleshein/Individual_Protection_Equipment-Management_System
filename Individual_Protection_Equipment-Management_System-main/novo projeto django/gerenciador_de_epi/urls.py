@@ -16,8 +16,4 @@ urlpatterns = [
     # Rotas de Empréstimo
     path('emprestar/', views.registrar_emprestimo, name='registrar_emprestimo'), 
     path('emprestimos/', views.listar_emprestimos, name='listar_emprestimos'),
-
-    #Rotas de Cadastro de Epi's
-    path('epis/', views.listar_epis, name='listar_epis'), 
-    path('epis/cadastro/', views.cadastrar_epi, name='cadastrar_epi'),
 ]

@@ -1,0 +1,20 @@
+{% extends 'gerenciador_de_epi/base.html' %}
+
+{% block content %}
+    <h2>Lista de Equipamentos (EPIs)</h2>
+    
+    <a href="{% url 'cadastrar_epi' %}" class="btn-primary" style="margin-bottom: 20px; display: inline-block;">
+        + Cadastrar Novo EPI
+    </a>
+
+    {% for epi in lista_epis %}
+        <div class="movimentacao-card">
+            <p><strong>Nome:</strong> {{ epi.nome }}</p>
+            <p><strong>CA (Certificado de Aprovação):</strong> {{ epi.ca }}</p>
+            <p><strong>Validade:</strong> {{ epi.validade }}</p>
+            </div>
+    {% empty %}
+        <p>Nenhum EPI encontrado. Cadastre um!</p>
+    {% endfor %}
+    
+{% endblock content %}

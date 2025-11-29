@@ -26,14 +26,3 @@ class EmprestimoForm(forms.ModelForm):
         model = Emprestimo
         # O Django AUTOMATICAMENTE cria dropdowns para as chaves estrangeiras (colaborador e epi)
         fields = ('colaborador', 'epi')
-
-# Formulário para cadastrar EPI
-class EPIForm(forms.ModelForm):
-    class Meta:
-        model = EPI
-        # Assumindo que seu modelo EPI tem nome, ca e validade
-        fields = ('nome', 'ca', 'validade') 
-
-        widgets = {
-            'validade': forms.DateInput(attrs={'type': 'date'}),
-        }
